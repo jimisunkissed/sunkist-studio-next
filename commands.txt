@@ -1,2 +1,5 @@
-supabase schema
-npx supabase gen types typescript --project-id your-project-id --schema public > src/schema/lib/config/supabase.ts
+# SUPABASE SCHEMA
+npx supabase gen types typescript --project-id your-project-id --schema public > src/schema/lib/config/supabase-schema.ts
+
+# NGROK
+ngrok http http://localhost:3000

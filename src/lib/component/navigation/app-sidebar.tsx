@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { ClerkUserButton } from '@/lib/component/clerk/clerk-user-button';
+import { CharacterSubmenuBody } from '@/lib/component/navigation/submenu/character-submenu';
 import { ProjectSubmenuBody, ProjectSubmenuHeader } from '@/lib/component/navigation/submenu/project-submenu';
 import { ScriptSubmenuBody } from '@/lib/component/navigation/submenu/script-submenu';
 import { cn } from '@/lib/utils';
@@ -24,12 +25,12 @@ import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 
 export function AppSidebar(): ReactNode {
+  const { asPath, push } = useRouter();
+
   const [activeMenu, setActiveMenu] = useState<MenuItemProps | null>(null);
   const [scrollPosition, setScrollPosition] = useState<ScrollPositionProps>({});
   const [open, setOpen] = useState<boolean>(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const { asPath, push } = useRouter();
 
   const menuItem: MenuItemProps[][] = [
     [
@@ -54,7 +55,7 @@ export function AppSidebar(): ReactNode {
         path: '/character',
         Icon: IconMasksTheater,
         Header: <></>,
-        Body: <></>,
+        Body: <CharacterSubmenuBody />,
       },
       {
         name: 'Story Card',

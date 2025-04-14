@@ -8,7 +8,7 @@ import { Plus } from 'lucide-react';
 import React, { ReactNode } from 'react';
 
 function ScriptPage(): ReactNode {
-  const appState = useAppStore();
+  const appStore = useAppStore();
 
   return (
     <div className={pageCn}>
@@ -21,7 +21,7 @@ function ScriptPage(): ReactNode {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-        {appState?.scripts?.map((x, i) => (
+        {appStore?.scripts?.map((x, i) => (
           <div key={i} className="group flex flex-col w-full rounded-xl border overflow-hidden cursor-pointer hover:shadow transition-shadow">
             <div className="flex aspect-[3/2] w-full items-center justify-center">
               <IconNotes className="h-12 w-12 text-neutral-500 group-hover:text-amber-500 transition-colors" />

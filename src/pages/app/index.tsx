@@ -4,11 +4,11 @@ import { pageCn } from '@/styles/class';
 import React, { ReactNode, useMemo } from 'react';
 
 function ProjectPage(): ReactNode {
-  const appState = useAppStore();
+  const appStore = useAppStore();
 
   const currentProject = useMemo(
-    () => appState?.organizations?.find((x) => x.id === appState?.organizationId),
-    [appState?.organizations, appState?.organizationId]
+    () => appStore?.organizations?.find((x) => x.id === appStore?.organizationId),
+    [appStore?.organizations, appStore?.organizationId]
   );
 
   return (

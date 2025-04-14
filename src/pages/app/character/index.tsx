@@ -7,37 +7,33 @@ import { FlexInput } from '@/lib/component/flex/flex-input';
 import { FlexSelect } from '@/lib/component/flex/flex-select';
 import { ThreeDots } from '@/lib/component/loader/three-dots';
 import { PageHeader } from '@/lib/component/navigation/page-header';
-import { CharacterCategories } from '@/lib/util/config/project-config';
+import { CharacterCategories } from '@/lib/util/config/character-config';
 import { stateSetter } from '@/lib/util/general/state-util';
 import { errorMessage } from '@/lib/util/general/string-util';
+import { getCharacterTable } from '@/lib/util/helper/get-table-util';
 import { cn } from '@/lib/utils';
+import { Database } from '@/schema/lib/config/supabase-schema';
 import { CharacterProps } from '@/schema/pages/app/character-schema';
 import { buttonCn, pageCn } from '@/styles/class';
-import { IconLegoFilled, IconMasksTheaterOff } from '@tabler/icons-react';
+import { IconMasksTheaterOff, IconMoodHappy } from '@tabler/icons-react';
 import { LetterText, Loader2, Plus, Shapes } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 function CharacterPage(): ReactNode {
-  const { organizationId } = useAppStore();
-  const [characters, setCharacters] = useState<any[] | null>(null);
+  const router = useRouter();
+  const appStore = useAppStore();
   const [newCharacter, setNewCharacter] = useState<CharacterProps>({ name: '', category: '' });
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const router = useRouter();
+  const { organizationId, characters, setCharacters } = appStore;
 
-  const getCharacters = async (): Promise<void> => {
+  const initCharacters = async (): Promise<void> => {
     try {
-      const res = await sunkistAxios({
-        method: 'get',
-        url: '/api/v1/service/database/supabase/st_character',
-        params: {
-          filters: [{ column: 'organization_id', func: 'eq', value: organizationId }],
-        },
-      });
-      setCharacters(res);
+      const res = await getCharacterTable(organizationId as string);
+      setCharacters(res as Database['public']['Tables']['st_character']['Row'][]);
     } catch (error) {
       console.error(errorMessage(error));
     }
@@ -48,10 +44,10 @@ function CharacterPage(): ReactNode {
     try {
       const res = await sunkistAxios({
         method: 'post',
-        url: '/api/v1/service/database/supabase/st_character',
+        url: '/api/v1/service/database/supabase/protected/st_character',
         body: { row: newCharacter },
       });
-      setCharacters((prev) => [...(prev ?? []), res]);
+      setCharacters([...(characters ?? []), res]);
       toast.success('Character created!');
       setOpen(false);
     } catch (error) {
@@ -62,8 +58,8 @@ function CharacterPage(): ReactNode {
   };
 
   useEffect(() => {
-    if (organizationId) getCharacters();
-  }, [organizationId]);
+    if (!!appStore && !!organizationId) initCharacters();
+  }, [!!appStore, organizationId]);
 
   useEffect(() => {
     if (!open) setNewCharacter({ name: '', category: '' });
@@ -133,7 +129,7 @@ function CharacterPage(): ReactNode {
               onClick={() => router.push(`/app/character/${x.id}`)}
             >
               <div className="flex aspect-[3/2] w-full items-center justify-center">
-                <IconLegoFilled className="h-12 w-12 text-neutral-200 group-hover:text-yellow-400 transition-colors" />
+                <IconMoodHappy className="h-12 w-12 text-neutral-200 group-hover:text-yellow-400 transition-colors" />
               </div>
               <div className="flex h-10 w-full items-center justify-center bg-neutral-100">
                 <span className="font-semibold">{x.name}</span>

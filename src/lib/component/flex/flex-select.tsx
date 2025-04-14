@@ -17,7 +17,7 @@ const sizeConfig = {
     text: 'text-xs md:text-xs',
     labelLeft: 'left-6',
     trigger: 'pl-8',
-    content: 'text-xs',
+    content: 'text-[10px]',
   },
   md: {
     container: 'h-9 rounded-lg',
@@ -29,7 +29,7 @@ const sizeConfig = {
     text: 'text-sm md:text-sm',
     labelLeft: 'left-8',
     trigger: 'pl-10',
-    content: 'text-sm',
+    content: 'text-xs',
   },
   lg: {
     container: 'h-11 rounded-xl',
@@ -41,13 +41,14 @@ const sizeConfig = {
     text: 'text-md md:text-md',
     labelLeft: 'left-10',
     trigger: 'pl-12',
-    content: 'text-md',
+    content: 'text-sm',
   },
 };
 
 export function FlexSelect({
   state,
   size = 'md',
+  scale = 1,
   Icon,
   label,
   message,
@@ -112,13 +113,30 @@ export function FlexSelect({
           {label}
         </span>
 
-        <Select value={state?.value ?? ''} onValueChange={state.setValue} onOpenChange={(open) => setIsOpen(open)}>
-          <SelectTrigger className={cn('flex-1 border-0 shadow-none focus:ring-0 focus-visible:ring-0', currentSize.trigger, currentSize.text)}>
+        <Select
+          value={state?.value ?? ''}
+          onValueChange={(v) => (state?.setValue ? state.setValue(v) : null)}
+          onOpenChange={(open) => setIsOpen(open)}
+        >
+          <SelectTrigger className={cn('h-full border-0 shadow-none focus:ring-0 focus-visible:ring-0', currentSize.trigger, currentSize.text)}>
             <SelectValue />
           </SelectTrigger>
-          <SelectContent ref={selectRef} className={cn(currentSize.content)}>
+          <SelectContent
+            ref={selectRef}
+            style={{
+              minWidth: 'auto',
+              width: `${100 / (scale as number)}%`,
+              transform: `scale(${scale}) translateY(4px)`,
+              transformOrigin: 'top left',
+            }}
+          >
             {options.map((x, i) => (
-              <SelectItem key={i} value={itemValue(x)} className={cn('hover:bg-neutral-100 transition-colors', currentSize.text)}>
+              <SelectItem
+                key={i}
+                value={itemValue(x)}
+                className={cn('hover:bg-neutral-100 transition-colors', currentSize.content)}
+                style={{ maxWidth: ((clickRef.current?.getBoundingClientRect().width ?? 0) as number) / (scale as number) - 12 }}
+              >
                 <Item prop={x} />
               </SelectItem>
             ))}

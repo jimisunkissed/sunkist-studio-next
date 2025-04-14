@@ -13,7 +13,7 @@ export function FrontNavbar(): ReactNode {
     <div className="sticky z-10 top-0 flex h-16 w-full items-center px-6 py-3 gap-4 bg-white">
       <div className="flex w-fit items-end gap-2 mr-auto">
         <IconChairDirector strokeWidth={2} className="size-8 text-amber-500" />
-        <Label className="text-lg text-neutral-600 font-black pb-0.5">sunkist studio</Label>
+        <Label className="text-lg text-neutral-600 font-black pb-0.5"></Label>
       </div>
 
       <SignedOut>

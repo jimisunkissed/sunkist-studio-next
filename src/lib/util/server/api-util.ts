@@ -8,6 +8,7 @@ export const onApiError = (req: NextApiRequest, res: NextApiResponse, error: any
   console.error('ERROR:', error?.message ?? '');
   return res.status(error?.code ?? 500).send(error.message ?? 'An unknown error occurred');
 };
+
 export const apiEncodeRequest = (baseUrl: string, params?: Record<string, any>): string => {
   if (!params) return baseUrl;
 

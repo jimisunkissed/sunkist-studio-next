@@ -1,4 +1,5 @@
 import '@/styles/globals.css';
+import '@/styles/react-flow.css';
 import type { AppProps } from 'next/app';
 import { RootLayout } from '@/lib/component/layout/root-layout';
 import { useEffect, useState } from 'react';
@@ -7,8 +8,8 @@ import { useRouter } from 'next/router';
 import { Toaster } from 'sonner';
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [loaded, setLoaded] = useState<boolean>(false);
   const router = useRouter();
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     setLoaded(true);

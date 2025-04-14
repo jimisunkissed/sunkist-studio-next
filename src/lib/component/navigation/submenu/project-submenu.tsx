@@ -12,7 +12,7 @@ import { IconFolder, IconMailFast } from '@tabler/icons-react';
 import axios from 'axios';
 import { LetterText, Loader2, Plus } from 'lucide-react';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 export function ProjectSubmenuHeader(): ReactNode {
   const { superUsers, userId } = useAppStore();
@@ -79,8 +79,8 @@ export function ProjectSubmenuHeader(): ReactNode {
 }
 
 export function ProjectSubmenuBody(): ReactNode {
-  const { organizations, organizationId, setOrganizationId } = useAppStore();
   const router = useRouter();
+  const { organizations, organizationId, setOrganizationId } = useAppStore();
 
   const selectProject = (orgId: string): void => {
     localStorage.setItem('organizationId', orgId);

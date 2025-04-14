@@ -3,7 +3,7 @@ import { FlexTooltip } from '@/lib/component/flex/flex-tooltip';
 import { textClass, borderClass } from '@/lib/util/general/color-util';
 import { cn } from '@/lib/utils';
 import { FlexInputProps } from '@/schema/lib/component/flex-schema';
-import { ChevronRight, Lock, LockOpen } from 'lucide-react';
+import { Lock, LockOpen } from 'lucide-react';
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
 const sizeConfig = {
@@ -56,7 +56,7 @@ export function FlexInput({
   const clickRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  Icon = useMemo(() => (type !== 'password' ? Icon ?? ChevronRight : !isShow ? Lock : LockOpen), [type, Icon, isShow]);
+  Icon = useMemo(() => (type !== 'password' ? Icon : !isShow ? Lock : LockOpen), [type, Icon, isShow]);
   const onTop: boolean = useMemo(() => isFocus || !!state?.value, [isFocus, state?.value]);
   const currentSize = useMemo(() => sizeConfig[size] || sizeConfig.md, [size]);
 
@@ -104,27 +104,31 @@ export function FlexInput({
         onMouseLeave={() => setIsHover(false)}
         onClick={() => inputRef.current?.focus()}
       >
-        <Icon
-          className={cn(
-            'absolute z-10 transition duration-300 ease-in-out',
-            currentSize.icon, // Apply size-specific icon dimensions
-            textClass[isFocus ? color : !valid ? 'red' : 'neutral'][400],
-            type === 'password' && 'cursor-pointer'
-          )}
-          onClick={() => type === 'password' && setIsShow(!isShow)}
-        />
+        {Icon && (
+          <Icon
+            className={cn(
+              'absolute z-10 transition duration-300 ease-in-out',
+              currentSize.icon,
+              textClass[isFocus ? color : !valid ? 'red' : 'neutral'][400],
+              type === 'password' && 'cursor-pointer'
+            )}
+            onClick={() => type === 'password' && setIsShow(!isShow)}
+          />
+        )}
 
-        <span
-          className={cn(
-            'absolute bg-white px-2 rounded-full font-medium',
-            'transition-all duration-300 ease-in-out',
-            currentSize.labelLeft,
-            onTop ? currentSize.label.onTop : currentSize.label.default,
-            textClass[!onTop && !valid ? 'red' : 'neutral'][onTop ? 800 : 400]
-          )}
-        >
-          {label}
-        </span>
+        {label && (
+          <span
+            className={cn(
+              'absolute bg-white px-2 rounded-full font-medium',
+              'transition-all duration-300 ease-in-out',
+              currentSize.labelLeft,
+              onTop ? currentSize.label.onTop : currentSize.label.default,
+              textClass[!onTop && !valid ? 'red' : 'neutral'][onTop ? 800 : 400]
+            )}
+          >
+            {label}
+          </span>
+        )}
 
         <Input
           id={id}
@@ -132,7 +136,7 @@ export function FlexInput({
           type={isShow ? 'text' : type}
           className={cn('flex-1 p-0 border-0 shadow-none focus-visible:ring-0', currentSize.input)}
           value={state?.value ?? ''}
-          onChange={(e) => state.setValue(e.target.value)}
+          onChange={(e) => (state?.setValue ? state.setValue(e.target.value) : null)}
         />
       </div>
     </FlexTooltip>

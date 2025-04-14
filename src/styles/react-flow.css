@@ -1,0 +1,11 @@
+.react-flow__handle {
+    width: 8px !important;
+    height: 8px !important;
+    background-color: white !important;
+    border: 1.5px solid #e5e5e5 !important;
+}
+
+/* .react-flow__edge path {
+    stroke: #d4d4d4 !important;
+    stroke-width: 4px !important;
+} */

@@ -15,7 +15,6 @@ const karla = Karla({
 
 export function RootLayout({ children }: RootLayoutProps): ReactNode {
   const router = useRouter();
-
   const isFullScreen: boolean = !router.asPath.startsWith('/app');
 
   return (

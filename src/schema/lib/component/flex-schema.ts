@@ -13,9 +13,9 @@ export type MonthYear = {
 export type FlexInputProps = {
   id: string;
   type?: 'text' | 'number' | 'password';
-  state: {
+  state?: {
     value?: string | number;
-    setValue: (value: string | number) => void;
+    setValue?: (value: string | number) => void;
   };
   size?: 'sm' | 'md' | 'lg';
   Icon?: LucideIcon | TablerIcon;
@@ -25,12 +25,28 @@ export type FlexInputProps = {
   valid?: boolean;
 };
 
-export type FlexSelectProps<T = any> = {
-  state: {
+export type FlexTextareaProps = {
+  id?: string;
+  state?: {
     value?: string;
-    setValue: (value: string) => void;
+    setValue?: (value: string) => void;
   };
   size?: 'sm' | 'md' | 'lg';
+  height?: string;
+  Icon?: LucideIcon | TablerIcon;
+  label: string;
+  message?: string;
+  color?: TailwindColorClass;
+  valid?: boolean;
+};
+
+export type FlexSelectProps<T = any> = {
+  state?: {
+    value?: string;
+    setValue?: (value: string) => void;
+  };
+  size?: 'sm' | 'md' | 'lg';
+  scale?: Number;
   Icon?: LucideIcon | TablerIcon;
   label: string;
   message?: string;

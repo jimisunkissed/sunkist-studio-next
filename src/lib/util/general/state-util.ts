@@ -48,7 +48,6 @@ const updateNestedState = <T extends State>(state: T, value: any, path: Path, is
   } else {
     current[lastKey] = value;
   }
-
   return newState;
 };
 
@@ -67,16 +66,17 @@ export const stateSetter = <T extends State>(setState: SetState<T>, value: any, 
   }
 };
 
-export const stateAssign = <T extends State>(state: T, value: any, strPath?: string, regex?: RegExp, isLowerCase?: boolean): any => {
+export const stateAssign = <T extends State>(state: T, value: any, path?: string, regex?: RegExp, isLowerCase?: boolean): any => {
   if (regex && !regex.test(value) && value !== '' && value !== undefined) return value;
 
-  const path = strPath ? strPath.trim().split('.') : null;
-  if (path && path.length > 0) {
-    return updateNestedState(state, value, path, isLowerCase);
+  const arrPath = splitStrPath(path);
+  if (arrPath && arrPath.length > 0) {
+    return updateNestedState(state, value, arrPath, isLowerCase);
   } else {
     if (isLowerCase && typeof value === 'string') {
       return value.toLowerCase();
+    } else {
+      return value;
     }
-    return value;
   }
 };
