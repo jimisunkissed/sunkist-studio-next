@@ -9,7 +9,7 @@ type SunkistAxiosProps = {
 };
 
 export async function sunkistAxios({ method, url = '', headers = {}, params = {}, body = {} }: SunkistAxiosProps) {
-  const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.sunkist.cloud' : 'http://localhost:3001';
+  const baseURL = process.env.NODE_ENV === 'production' ? 'https://sunkist-api-next.vercel.app' : 'http://localhost:3001';
 
   const encodedParams: Record<string, any> = {};
   Object.keys(params).forEach((key) => {
