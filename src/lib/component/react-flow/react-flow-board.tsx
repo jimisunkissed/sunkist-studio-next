@@ -1,21 +1,19 @@
 import '@xyflow/react/dist/style.css';
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { addEdge, Background, Connection, Controls, Edge, Node, ReactFlow, useEdgesState, useNodesState, useViewport } from '@xyflow/react';
-import { DragEndEvent } from '@dnd-kit/core';
+import { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core';
 import { v4 } from 'uuid';
-import { deselectAllElements } from '@/lib/util/helper/react-flow-util';
-import { EdgeAttributes } from '@/lib/util/config/react-flow-config';
+import { deselectAllElements, isValidConnection } from '@/lib/util/helper/react-flow-util';
+import { EdgeAttributes, EdgeConfig } from '@/lib/util/config/react-flow-config';
 import { Database } from '@/schema/lib/config/supabase-schema';
 import { errorMessage } from '@/lib/util/general/string-util';
 import { useAppStore } from '@/hooks/app-store';
 import { sunkistAxios } from '@/lib/api/sunkist-api';
-import { useRouter } from 'next/router';
 import { ReactFlowBoardProps } from '@/schema/lib/component/react-flow-schema';
 import { Label } from '@/components/ui/label';
 import { edgeTypes, initEdges, initNodes, nodeTypes } from '@/lib/util/config/react-flow-config';
 
 const ReactFlowBoard = forwardRef(({ sheet }: ReactFlowBoardProps, ref) => {
-  const { isReady, asPath } = useRouter();
   const { characters, organizationId } = useAppStore();
   const viewport = useViewport();
 
@@ -79,37 +77,43 @@ const ReactFlowBoard = forwardRef(({ sheet }: ReactFlowBoardProps, ref) => {
   const addNode = (event: DragEndEvent) => {
     if (event?.over?.id !== 'drop-container') return;
 
+    let data: Record<string, unknown> = {};
+    const type: UniqueIdentifier | undefined = event?.active?.id;
+    if (type === 'characterNode' && !!sheet && sheet.content_type === 'character') data.character_id = sheet.content_id;
+
     setNodes((prev) => [
       ...prev,
       {
         id: v4(),
-        type: event.active.id as string,
+        type: type.toString(),
         position: {
           x: event.delta.x / viewport.zoom - (viewport.x * 1.1) / viewport.zoom - 20,
           y: event.delta.y / viewport.zoom - (viewport.y * 1.1) / viewport.zoom,
         },
-        data: {},
+        data,
       },
     ]);
   };
 
   const onConnect = useCallback((connection: Connection) => {
-    const isEventConnection = connection.sourceHandle === 'after-event' && connection.targetHandle === 'before-event';
+    if (!isValidConnection(connection)) return;
+
+    const edgeType = EdgeConfig.find((config) => config.checker(connection));
 
     const edge: Edge = {
       ...connection,
       ...EdgeAttributes,
       id: v4(),
-      type: isEventConnection ? 'eventEdge' : undefined,
-      data: isEventConnection ? { event: 'New Event' } : undefined,
+      type: edgeType?.type,
+      data: edgeType?.data,
     };
 
     setEdges((prev) => addEdge(edge, prev));
   }, []);
 
   useEffect(() => {
-    if (isReady && !!asPath && !!organizationId && !!characters && !!sheet?.id) getElements();
-  }, [isReady, asPath, organizationId, !!characters, sheet?.id]);
+    if (!!organizationId && !!characters && !!sheet?.id) getElements();
+  }, [organizationId, !!characters, sheet?.id]);
 
   useImperativeHandle(ref, () => ({
     addNode,

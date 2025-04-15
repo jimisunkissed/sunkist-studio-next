@@ -22,7 +22,7 @@ export const CharacterAttributeNode = ({ id, data, selected }: NodeProps): React
       selected={selected}
       className={cn('rounded-xl p-0 hover:ring-sky-200 transition-all', selected ? 'border-sky-300 ring-1 ring-sky-300 hover:ring-sky-300' : '')}
     >
-      <Handle id="character-attribute" position={Position.Top} type="source" />
+      <Handle id="portal-character-attribute-out" position={Position.Top} type="source" />
       <div className="flex flex-col w-64 rounded-xl overflow-hidden">
         <div className="flex w-full border-b items-center px-3 py-2 gap-2 bg-neutral-50">
           <IconPrismLight className="h-4 w-4" />
@@ -50,9 +50,9 @@ export const CharacterAttributeNode = ({ id, data, selected }: NodeProps): React
         <>
           {currentType.elements.map((x, i) => (
             <div key={i} className="relative flex h-8 w-full border-t items-center justify-center">
-              <Handle id={`attribute-${currentType.label}-${convertToSlug(x)}-left`} position={Position.Left} type="target" />
-              <span className="text-xs">{x}</span>
-              <Handle id={`attribute-${currentType.label}-${convertToSlug(x)}-right`} position={Position.Right} type="target" />
+              <Handle id={`portal-${x.id}-left-in`} position={Position.Left} type="target" />
+              <span className="text-xs">{x.label}</span>
+              <Handle id={`portal-${x.id}-right-in`} position={Position.Right} type="target" />
             </div>
           ))}
         </>

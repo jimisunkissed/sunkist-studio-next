@@ -49,6 +49,7 @@ export function FlexInput({
   message,
   color = 'amber',
   valid = true,
+  disabled = false,
 }: FlexInputProps): ReactNode {
   const [isHover, setIsHover] = useState<boolean>(false);
   const [isFocus, setIsFocus] = useState<boolean>(false);
@@ -98,7 +99,8 @@ export function FlexInput({
           'relative flex w-full bg-white border-[1.5px] ring-white items-center cursor-text',
           'transition-all duration-300',
           currentSize.container,
-          borderClass[isFocus ? color : !valid ? 'red' : 'neutral'][isFocus || isHover ? 400 : 200]
+          borderClass[isFocus ? color : !valid ? 'red' : 'neutral'][isFocus || isHover ? 400 : 200],
+          disabled ? 'pointer-events-none' : ''
         )}
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}

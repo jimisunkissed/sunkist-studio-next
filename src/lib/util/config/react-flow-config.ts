@@ -3,7 +3,8 @@ import { CharacterAttributeNode } from '@/lib/component/react-flow/node/characte
 import { CharacterNode } from '@/lib/component/react-flow/node/character-node';
 import { LinkNode } from '@/lib/component/react-flow/node/link-node';
 import { TextNode } from '@/lib/component/react-flow/node/text-node';
-import { Edge, MarkerType, Node } from '@xyflow/react';
+import { EdgeConfigProps } from '@/schema/lib/config/react-flow-config-schema';
+import { Connection, Edge, MarkerType, Node } from '@xyflow/react';
 
 export const nodeTypes = {
   characterNode: CharacterNode,
@@ -27,3 +28,11 @@ export const EdgeAttributes = {
     height: 20,
   },
 };
+
+export const EdgeConfig: EdgeConfigProps[] = [
+  {
+    checker: (c: Connection): boolean => c.sourceHandle === 'entity-character-event-out' && c.targetHandle === 'entity-character-event-in',
+    type: 'eventEdge',
+    data: { event: 'New Event' },
+  },
+];

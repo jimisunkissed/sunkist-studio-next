@@ -23,6 +23,7 @@ export type FlexInputProps = {
   message?: string;
   color?: TailwindColorClass;
   valid?: boolean;
+  disabled?: boolean;
 };
 
 export type FlexTextareaProps = {

@@ -5,10 +5,12 @@ import { CharacterNodeOverlay } from '@/lib/component/react-flow/node/character-
 import { LinkNodeOverlay } from '@/lib/component/react-flow/node/link-node';
 import { TextNodeOverlay } from '@/lib/component/react-flow/node/text-node';
 import { deleteEdge, deleteNode, deselectAllElements } from '@/lib/util/helper/react-flow-util';
+import { cn } from '@/lib/utils';
 import { SelectedElementsProps } from '@/schema/lib/component/react-flow-schema';
 import { useDraggable, DragOverlay, useDndContext } from '@dnd-kit/core';
 import {
   IconBrush,
+  IconCirclesRelation,
   IconLink,
   IconMessageDots,
   IconMoodHappy,
@@ -50,6 +52,7 @@ export function ReactFlowSidebar(): ReactNode {
   const reactFlowMenu = [
     { id: 'characterNode', name: 'Character', Icon: IconMoodHappy, Overlay: CharacterNodeOverlay },
     { id: 'characterAttributeNode', name: 'Attribute', Icon: IconTable, Overlay: CharacterAttributeNodeOverlay },
+    { id: 'characterRelationNode', name: 'Relation', Icon: IconCirclesRelation },
     { id: 'textNode', name: 'Text', Icon: IconNotes, Overlay: TextNodeOverlay },
     { id: 'linkNode', name: 'Link', Icon: IconLink, Overlay: LinkNodeOverlay },
     { id: 'colorNode', name: 'Color', Icon: IconBrush },
@@ -59,7 +62,7 @@ export function ReactFlowSidebar(): ReactNode {
   ];
   const elementMenu = [
     { id: 'comment', name: 'Comment', Icon: IconMessageDots },
-    { id: 'trash', name: 'Trash', Icon: IconTrashX, onClick: deleteElement },
+    { id: 'delete', name: 'Delete', Icon: IconTrashX, onClick: deleteElement },
   ];
   const Overlay = useMemo(() => reactFlowMenu.find((x) => x.id === activeId)?.Overlay ?? null, [activeId]);
 
@@ -73,23 +76,33 @@ export function ReactFlowSidebar(): ReactNode {
   useOnSelectionChange({ onChange });
 
   return (
-    <div className="flex flex-col h-full w-full items-center p-1 gap-1 overflow-x-hidden bg-neutral-50">
-      {!currentElement ? (
-        reactFlowMenu.map((x) => <MenuItem key={x.id} item={x} draggable={!currentElement} />)
-      ) : (
-        <>
+    <>
+      <div className="relative flex flex-col h-full w-full overflow-x-hidden bg-neutral-50">
+        <div
+          className={cn('absolute flex flex-col w-full p-1 gap-1', !currentElement ? 'translate-x-0' : '-translate-x-full')}
+        >
+          {reactFlowMenu.map((x) => (
+            <MenuItem key={x.id} item={x} draggable={!currentElement} />
+          ))}
+        </div>
+
+        <div
+          className={cn('absolute flex flex-col w-full p-1 gap-1', !currentElement ? 'translate-x-full' : 'translate-x-0')}
+        >
           <div
             className="flex h-6 w-full rounded items-center justify-center cursor-pointer hover:bg-white transition-colors"
             onClick={() => deselectAllElements(setNodes, setEdges)}
           >
             <ArrowLeft className="h-3 w-3" />
           </div>
+
           <Separator />
+
           {elementMenu.map((x) => (
             <MenuItem key={x.id} item={x} draggable={!currentElement} />
           ))}
-        </>
-      )}
+        </div>
+      </div>
 
       {activeId && Overlay && (
         <DragOverlay>
@@ -98,7 +111,7 @@ export function ReactFlowSidebar(): ReactNode {
           </div>
         </DragOverlay>
       )}
-    </div>
+    </>
   );
 }
 

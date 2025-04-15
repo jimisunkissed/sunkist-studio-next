@@ -6,39 +6,33 @@ import { updateNode } from '@/lib/util/helper/react-flow-util';
 import { IconMoodHappy } from '@tabler/icons-react';
 import { NodeProps, Position, useReactFlow, useViewport } from '@xyflow/react';
 import { CaseUpper, Tag } from 'lucide-react';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import { useAppStore } from '@/hooks/app-store';
 import { LabeledHandle } from '@/components/labeled-handle';
 import { cn } from '@/lib/utils';
 
 export const CharacterNode = ({ id, data, selected }: NodeProps): ReactNode => {
   const { setNodes } = useReactFlow();
-  const { zoom } = useViewport();
   const { characters } = useAppStore();
+
+  const name = useMemo(
+    () => (Array.isArray(characters) && !!data?.character_id ? characters.find((char) => char.id === data?.character_id)?.name : undefined),
+    [JSON.stringify(characters), data?.character_id]
+  );
 
   return (
     <BaseNode
       selected={selected}
       className={cn('rounded-xl p-0 hover:ring-sky-200 transition-all', selected ? 'border-sky-300 ring-1 ring-sky-300 hover:ring-sky-300' : '')}
     >
-      <div className={cn('flex flex-col w-64 rounded-xl overflow-hidden')}>
+      <div className="flex flex-col w-64 rounded-xl overflow-hidden">
         <div className="flex w-full border-b items-center px-3 py-2 gap-2 bg-neutral-50">
           <IconMoodHappy className="h-4 w-4" />
           <Label className="font-medium">Character</Label>
         </div>
 
         <div className="flex flex-col w-full p-3 gap-2 bg-white">
-          <FlexSelect
-            label="Name"
-            size="sm"
-            scale={zoom}
-            Icon={CaseUpper}
-            options={(characters ?? []).map((x) => x.name)}
-            state={{
-              value: (data?.name ?? '') as string,
-              setValue: (v) => updateNode(setNodes, id, v, 'data,name'),
-            }}
-          />
+          <FlexInput id="name" label="Name" size="sm" Icon={CaseUpper} state={{ value: (name ?? 'Not Found') as string }} disabled />
 
           <FlexInput
             id="tag"
@@ -54,10 +48,22 @@ export const CharacterNode = ({ id, data, selected }: NodeProps): ReactNode => {
       </div>
 
       <div className="relative flex w-full items-center justify-between">
-        <LabeledHandle id="before-event" title="Before" position={Position.Left} type="target" className="text-[10px] mb-2" />
-        <LabeledHandle id="relations" title="Relations" position={Position.Bottom} type="target" className="text-[10px] pb-2" />
-        <LabeledHandle id="attributes" title="Attributes" position={Position.Bottom} type="target" className="text-[10px] pb-2" />
-        <LabeledHandle id="after-event" title="After" position={Position.Right} type="source" className="text-[10px] mb-2" />
+        <LabeledHandle id="entity-character-event-in" title="Before" position={Position.Left} type="target" className="text-[10px] mb-2" />
+        <LabeledHandle
+          id="entity-character-relation-in"
+          title="Relations"
+          position={Position.Bottom}
+          type="target"
+          className="text-[10px] pb-2"
+        />
+        <LabeledHandle
+          id="entity-character-attribute-in"
+          title="Attributes"
+          position={Position.Bottom}
+          type="target"
+          className="text-[10px] pb-2"
+        />
+        <LabeledHandle id="entity-character-event-out" title="After" position={Position.Right} type="source" className="text-[10px] mb-2" />
       </div>
     </BaseNode>
   );
