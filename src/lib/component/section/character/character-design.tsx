@@ -6,8 +6,7 @@ import { CharacterCategories } from '@/lib/util/config/character-config';
 import { stateSetter } from '@/lib/util/general/state-util';
 import { SetState, State } from '@/schema/lib/util/general/state-util-schema';
 import { CharacterDesignProps } from '@/schema/pages/app/character-schema';
-import { IconLegoFilled } from '@tabler/icons-react';
-import { LetterText, Loader2, Shapes } from 'lucide-react';
+import { LetterText, Loader2, Shapes, Smile } from 'lucide-react';
 import React, { ReactNode } from 'react';
 
 export function CharacterDesign({ character, setCharacter }: CharacterDesignProps): ReactNode {
@@ -31,7 +30,7 @@ export function CharacterDesign({ character, setCharacter }: CharacterDesignProp
                     <img src={character.image} alt="profile image" className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-white">
-                      <IconLegoFilled className="h-12 w-12 text-yellow-400" />
+                      <Smile className="h-12 w-12 text-yellow-400" />
                     </div>
                   )}
                 </div>
@@ -40,7 +39,15 @@ export function CharacterDesign({ character, setCharacter }: CharacterDesignProp
                   label="Category"
                   Icon={Shapes}
                   options={CharacterCategories}
-                  state={{ value: character?.category, setValue: (v) => stateSetter(setCharacter as SetState<State>, v, 'category') }}
+                  state={{
+                    value: character?.category,
+                    setValue: (v) => {
+                      stateSetter(setCharacter as SetState<State>, v, 'category');
+                      stateSetter(setCharacter as SetState<State>, CharacterCategories.find((cat) => cat.label === v)?.priority, 'priority');
+                    },
+                  }}
+                  itemValue={(value) => value.label}
+                  Item={({ prop }) => <span>{prop.label}</span>}
                 />
 
                 <FlexInput

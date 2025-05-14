@@ -3,15 +3,11 @@ import { ProjectProps } from '@/schema/pages/app/project-schema';
 
 export type AppStoreSchema = {
   // App Settings
-  appId: string;
-  appCode: string;
   superUsers: string[];
 
   // Authentication
   authenticated: boolean;
-  token: string;
   setAuthenticated: (value: boolean) => void;
-  setToken: (value: string) => void;
 
   // Organization
   organizations: ProjectProps[] | null;
@@ -38,6 +34,18 @@ export type AppStoreSchema = {
   setCharacters: (value: Database['public']['Tables']['st_character']['Row'][]) => void;
   setStoryCards: (value: any[]) => void;
   setPreviz: (value: any[]) => void;
+};
+
+export type FileStoreSchema = {
+  appFiles: File[];
+  setAppFiles: (value: File[]) => void;
+};
+
+export type AuthStoreSchema = {
+  signer: string | null;
+  token: string | null;
+  setSigner: (value: string | null) => void;
+  setToken: (value: string | null) => void;
 };
 
 export type FlowStoreSchema = {

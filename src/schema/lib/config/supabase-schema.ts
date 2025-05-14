@@ -141,6 +141,7 @@ export type Database = {
           image: string
           name: string
           organization_id: string
+          priority: number | null
           updated_at: string | null
         }
         Insert: {
@@ -151,6 +152,7 @@ export type Database = {
           image?: string
           name?: string
           organization_id?: string
+          priority?: number | null
           updated_at?: string | null
         }
         Update: {
@@ -161,6 +163,7 @@ export type Database = {
           image?: string
           name?: string
           organization_id?: string
+          priority?: number | null
           updated_at?: string | null
         }
         Relationships: [

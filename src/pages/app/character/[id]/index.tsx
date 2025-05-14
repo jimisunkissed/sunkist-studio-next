@@ -31,7 +31,7 @@ function CharacterDetailPage(): ReactNode {
 
   const getCharacter = async (): Promise<void> => {
     try {
-      const res = await sunkistAxios({ method: 'get', url: `/api/v1/service/database/supabase/protected/st_character/${id}` });
+      const res = await sunkistAxios({ method: 'get', url: `/v1/cloud/supabase/protected/st_character/${id}` });
       setCharacter(res);
     } catch (error) {
       console.error(errorMessage(error));

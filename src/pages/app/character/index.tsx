@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useAppStore } from '@/hooks/app-store';
 import { sunkistAxios } from '@/lib/api/sunkist-api';
 import { FlexInput } from '@/lib/component/flex/flex-input';
@@ -10,13 +11,12 @@ import { PageHeader } from '@/lib/component/navigation/page-header';
 import { CharacterCategories } from '@/lib/util/config/character-config';
 import { stateSetter } from '@/lib/util/general/state-util';
 import { errorMessage } from '@/lib/util/general/string-util';
-import { getCharacterTable } from '@/lib/util/helper/get-table-util';
+import { getCharactersByOrg } from '@/lib/util/helper/get-table-util';
 import { cn } from '@/lib/utils';
 import { Database } from '@/schema/lib/config/supabase-schema';
 import { CharacterProps } from '@/schema/pages/app/character-schema';
 import { buttonCn, pageCn } from '@/styles/class';
-import { IconMasksTheaterOff, IconMoodHappy } from '@tabler/icons-react';
-import { LetterText, Loader2, Plus, Shapes } from 'lucide-react';
+import { Frown, LetterText, Loader2, Plus, Shapes, Smile } from 'lucide-react';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -24,15 +24,15 @@ import { toast } from 'sonner';
 function CharacterPage(): ReactNode {
   const router = useRouter();
   const appStore = useAppStore();
-  const [newCharacter, setNewCharacter] = useState<CharacterProps>({ name: '', category: '' });
+  const [newCharacter, setNewCharacter] = useState<CharacterProps>({ name: '', category: null, priority: null });
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { organizationId, characters, setCharacters } = appStore;
 
-  const initCharacters = async (): Promise<void> => {
+  const getCharacters = async (): Promise<void> => {
     try {
-      const res = await getCharacterTable(organizationId as string);
+      const res = await getCharactersByOrg(organizationId as string);
       setCharacters(res as Database['public']['Tables']['st_character']['Row'][]);
     } catch (error) {
       console.error(errorMessage(error));
@@ -44,7 +44,7 @@ function CharacterPage(): ReactNode {
     try {
       const res = await sunkistAxios({
         method: 'post',
-        url: '/api/v1/service/database/supabase/protected/st_character',
+        url: '/v1/cloud/supabase/protected/st_character',
         body: { row: newCharacter },
       });
       setCharacters([...(characters ?? []), res]);
@@ -58,11 +58,11 @@ function CharacterPage(): ReactNode {
   };
 
   useEffect(() => {
-    if (!!appStore && !!organizationId) initCharacters();
+    if (!!appStore && !!organizationId) getCharacters();
   }, [!!appStore, organizationId]);
 
   useEffect(() => {
-    if (!open) setNewCharacter({ name: '', category: '' });
+    if (!open) setNewCharacter({ name: '', category: null, priority: null });
   }, [open]);
 
   return (
@@ -87,14 +87,22 @@ function CharacterPage(): ReactNode {
                 label="Category"
                 Icon={Shapes}
                 options={CharacterCategories}
-                state={{ value: newCharacter.category, setValue: (v) => stateSetter(setNewCharacter, v, 'category') }}
+                state={{
+                  value: newCharacter?.category ?? '',
+                  setValue: (v) => {
+                    stateSetter(setNewCharacter, v, 'category');
+                    stateSetter(setNewCharacter, CharacterCategories.find((cat) => cat.label === v)?.priority, 'priority');
+                  },
+                }}
+                itemValue={(value) => value.label}
+                Item={({ prop }) => <span>{prop.label}</span>}
               />
 
               <FlexInput
                 id="name"
                 label="Name"
                 Icon={LetterText}
-                state={{ value: newCharacter.name, setValue: (v) => stateSetter(setNewCharacter, v, 'name') }}
+                state={{ value: newCharacter?.name ?? '', setValue: (v) => stateSetter(setNewCharacter, v, 'name') }}
               />
             </div>
 
@@ -112,12 +120,14 @@ function CharacterPage(): ReactNode {
       </div>
 
       {!Array.isArray(characters) ? (
-        <div className="flex flex-1 w-full items-center justify-center">
-          <ThreeDots />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <Skeleton key={i} className="aspect-square w-full rounded-xl" />
+          ))}
         </div>
       ) : characters.length <= 0 ? (
         <div className="flex flex-col flex-1 w-full items-center justify-center gap-2 text-neutral-300">
-          <IconMasksTheaterOff className="h-20 w-20" />
+          <Frown className="h-20 w-20" />
           <Label className="text-lg font-bold">No character found</Label>
         </div>
       ) : (
@@ -129,7 +139,7 @@ function CharacterPage(): ReactNode {
               onClick={() => router.push(`/app/character/${x.id}`)}
             >
               <div className="flex aspect-[3/2] w-full items-center justify-center">
-                <IconMoodHappy className="h-12 w-12 text-neutral-200 group-hover:text-yellow-400 transition-colors" />
+                <Smile className="h-12 w-12 text-neutral-200 group-hover:text-yellow-400 transition-colors" />
               </div>
               <div className="flex h-10 w-full items-center justify-center bg-neutral-100">
                 <span className="font-semibold">{x.name}</span>

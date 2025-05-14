@@ -4,7 +4,8 @@ import { Dispatch, ReactNode, SetStateAction } from 'react';
 
 export type CharacterProps = {
   name: string;
-  category: (typeof CharacterCategories)[number] | '';
+  priority: (typeof CharacterCategories)[number]['priority'] | null;
+  category: (typeof CharacterCategories)[number]['label'] | null;
 };
 
 export type CharacterTabProps = {

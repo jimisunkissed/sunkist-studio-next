@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { EdgeProps, getBezierPath, useReactFlow, BaseEdge } from '@xyflow/react';
 import { ReactNode } from 'react';
 
-export const EventEdge = ({
+export const ShiftEdge = ({
   id,
   selected,
   data,
@@ -42,14 +42,14 @@ export const EventEdge = ({
           className={cn('nodrag flex flex-col w-64 rounded-xl border overflow-hidden bg-white transition-all', selected ? 'border-sky-300' : '')}
         >
           <div className="flex h-8 w-full border-b items-center px-3 py-2 bg-neutral-50">
-            <Label className="font-medium select-none">Event</Label>
+            <Label className="font-medium select-none">Shift</Label>
           </div>
 
           <Input
             className="nodrag border-0 focus-visible:ring-0 text-xs md:text-xs"
             placeholder="None"
-            value={(data?.event as string) ?? ''}
-            onChange={(e) => updateEdge(setEdges, id, e.target.value, 'data,event')}
+            value={(data?.shift as string) ?? ''}
+            onChange={(e) => updateEdge(setEdges, id, e.target.value, 'data,shift')}
             onClick={(e) => e.stopPropagation()}
           />
         </div>

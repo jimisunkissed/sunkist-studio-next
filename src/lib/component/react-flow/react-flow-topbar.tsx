@@ -52,7 +52,7 @@ export function ReactFlowTopbar({ sheet }: ReactFlowTopbarProps): ReactNode {
         nodePromise.push(
           sunkistAxios({
             method: 'put',
-            url: '/api/v1/service/database/supabase/protected/st_flow_node',
+            url: '/v1/cloud/supabase/protected/st_flow_node',
             body: {
               rows: nodes,
             },
@@ -62,7 +62,7 @@ export function ReactFlowTopbar({ sheet }: ReactFlowTopbarProps): ReactNode {
         nodePromise.push(
           sunkistAxios({
             method: 'delete',
-            url: '/api/v1/service/database/supabase/protected/st_flow_node',
+            url: '/v1/cloud/supabase/protected/st_flow_node',
             body: {
               ids: nodeIdDel,
             },
@@ -76,7 +76,7 @@ export function ReactFlowTopbar({ sheet }: ReactFlowTopbarProps): ReactNode {
         edgePromise.push(
           sunkistAxios({
             method: 'put',
-            url: '/api/v1/service/database/supabase/protected/st_flow_edge',
+            url: '/v1/cloud/supabase/protected/st_flow_edge',
             body: {
               rows: edges,
             },
@@ -86,7 +86,7 @@ export function ReactFlowTopbar({ sheet }: ReactFlowTopbarProps): ReactNode {
         edgePromise.push(
           sunkistAxios({
             method: 'delete',
-            url: '/api/v1/service/database/supabase/protected/st_flow_edge',
+            url: '/v1/cloud/supabase/protected/st_flow_edge',
             body: {
               ids: edgeIdDel,
             },

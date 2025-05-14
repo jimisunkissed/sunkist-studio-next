@@ -12,6 +12,7 @@ import { sunkistAxios } from '@/lib/api/sunkist-api';
 import { ReactFlowBoardProps } from '@/schema/lib/component/react-flow-schema';
 import { Label } from '@/components/ui/label';
 import { edgeTypes, initEdges, initNodes, nodeTypes } from '@/lib/util/config/react-flow-config';
+import { reactFlowMenu } from '@/lib/component/react-flow/react-flow-sidebar';
 
 const ReactFlowBoard = forwardRef(({ sheet }: ReactFlowBoardProps, ref) => {
   const { characters, organizationId } = useAppStore();
@@ -26,7 +27,7 @@ const ReactFlowBoard = forwardRef(({ sheet }: ReactFlowBoardProps, ref) => {
       const [nodeRes, edgeRes] = await Promise.all([
         sunkistAxios({
           method: 'get',
-          url: '/api/v1/service/database/supabase/protected/st_flow_node',
+          url: '/v1/cloud/supabase/protected/st_flow_node',
           params: {
             filters: [
               { column: 'organization_id', func: 'eq', value: organizationId },
@@ -36,7 +37,7 @@ const ReactFlowBoard = forwardRef(({ sheet }: ReactFlowBoardProps, ref) => {
         }),
         sunkistAxios({
           method: 'get',
-          url: '/api/v1/service/database/supabase/protected/st_flow_edge',
+          url: '/v1/cloud/supabase/protected/st_flow_edge',
           params: {
             filters: [
               { column: 'organization_id', func: 'eq', value: organizationId },
@@ -80,6 +81,7 @@ const ReactFlowBoard = forwardRef(({ sheet }: ReactFlowBoardProps, ref) => {
     let data: Record<string, unknown> = {};
     const type: UniqueIdentifier | undefined = event?.active?.id;
     if (type === 'characterNode' && !!sheet && sheet.content_type === 'character') data.character_id = sheet.content_id;
+    const order: number = reactFlowMenu.findIndex((menu) => menu.id === type.toString());
 
     setNodes((prev) => [
       ...prev,
@@ -88,7 +90,7 @@ const ReactFlowBoard = forwardRef(({ sheet }: ReactFlowBoardProps, ref) => {
         type: type.toString(),
         position: {
           x: event.delta.x / viewport.zoom - (viewport.x * 1.1) / viewport.zoom - 20,
-          y: event.delta.y / viewport.zoom - (viewport.y * 1.1) / viewport.zoom,
+          y: (event.delta.y + (order + 1) * 48) / viewport.zoom - (viewport.y * 1.1) / viewport.zoom,
         },
         data,
       },

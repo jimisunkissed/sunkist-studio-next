@@ -1,10 +1,20 @@
-export type CharacterAtributeElementProps = {
+export type CharacterCategoriesProps = {
+  priority: number;
+  label: string;
+};
+
+export type CharacterAtributesElementProps = {
   id: string;
   label: string;
 };
 
-export type CharacterAttributeProps = {
+export type CharacterAttributesProps = {
   id: string;
   label: string;
-  elements: CharacterAtributeElementProps[];
+  elements: CharacterAtributesElementProps[];
+};
+
+export type CharacterRelationsProps = {
+  id: string;
+  label: string;
 };

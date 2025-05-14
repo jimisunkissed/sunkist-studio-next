@@ -1,18 +1,18 @@
-import { CharacterAttributeProps } from '@/schema/lib/util/config/character-config-schema';
+import { CharacterAttributesProps, CharacterCategoriesProps, CharacterRelationsProps } from '@/schema/lib/util/config/character-config-schema';
 
-export const CharacterCategories: string[] = [
-  'Protagonist',
-  'Antagonist',
-  'Deuteragonist',
-  'Tritagonist',
-  'Major Support',
-  'Minor Support',
-  'Extras',
+export const CharacterCategories: CharacterCategoriesProps[] = [
+  { priority: 1, label: 'Protagonist' },
+  { priority: 2, label: 'Antagonist' },
+  { priority: 3, label: 'Deuteragonist' },
+  { priority: 4, label: 'Tritagonist' },
+  { priority: 5, label: 'Major Support' },
+  { priority: 6, label: 'Minor Support' },
+  { priority: 7, label: 'Extras' },
 ];
 
-export const CharacterAttributes: CharacterAttributeProps[] = [
+export const CharacterAttributes: CharacterAttributesProps[] = [
   {
-    id: 'character-visual',
+    id: 'visual',
     label: 'Visual',
     elements: [
       { id: 'appearance', label: 'Physical Appearance' },
@@ -24,7 +24,7 @@ export const CharacterAttributes: CharacterAttributeProps[] = [
     ],
   },
   {
-    id: 'character-audio',
+    id: 'audio',
     label: 'Audio',
     elements: [
       { id: 'voice', label: 'Voice Qualities' },
@@ -35,7 +35,7 @@ export const CharacterAttributes: CharacterAttributeProps[] = [
     ],
   },
   {
-    id: 'character-psychological',
+    id: 'psychological',
     label: 'Psychological',
     elements: [
       { id: 'personality', label: 'Personality Traits' },
@@ -46,7 +46,7 @@ export const CharacterAttributes: CharacterAttributeProps[] = [
     ],
   },
   {
-    id: 'character-sociological',
+    id: 'sociological',
     label: 'Sociological',
     elements: [
       { id: 'culture', label: 'Cultural Background' },
@@ -57,7 +57,7 @@ export const CharacterAttributes: CharacterAttributeProps[] = [
     ],
   },
   {
-    id: 'character-narrative',
+    id: 'narrative',
     label: 'Narrative',
     elements: [
       { id: 'function', label: 'Function in Story' },
@@ -66,4 +66,15 @@ export const CharacterAttributes: CharacterAttributeProps[] = [
       { id: 'contrast', label: 'Contrast with Other Characters' },
     ],
   },
+];
+
+export const CharacterRelations: CharacterRelationsProps[] = [
+  { id: 'history', label: 'Relationship History' },
+  { id: 'dynamic', label: 'Relationship Dynamic' },
+  { id: 'power', label: 'Power Dynamics' },
+  { id: 'communication', label: 'Communication Style' },
+  { id: 'conflict', label: 'Sources of Conflict' },
+  { id: 'growth', label: 'Growth & Change' },
+  { id: 'subtext', label: 'Emotional Subtext' },
+  { id: 'symbolism', label: 'Symbolic Meaning' },
 ];

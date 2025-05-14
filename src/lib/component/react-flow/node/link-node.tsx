@@ -19,8 +19,8 @@ export const LinkNode = ({ id, data, selected }: NodeProps): ReactNode => {
       <Handle id="value-link-left-out" position={Position.Left} type="source" />
       <Handle id="value-link-right-out" position={Position.Right} type="source" />
       <Handle id="value-link-bottom-out" position={Position.Bottom} type="source" />
-      <div className="flex flex-col w-64 rounded-xl overflow-hidden bg-white">
-        <div className="flex h-8 w-full border-b items-center px-3 py-2 gap-2 bg-neutral-50">
+      <div className="flex flex-col w-64 rounded-xl">
+        <div className="flex h-8 w-full rounded-t-xl border-b items-center px-3 py-2 gap-2 bg-neutral-50">
           <IconLink className="h-4 w-4" />
           <Label className="font-medium">Link</Label>
         </div>

@@ -1,4 +1,4 @@
-import { Connection } from '@xyflow/react';
+import { Connection, Node } from '@xyflow/react';
 
 export type EdgeConfigProps = {
   checker: (c: Connection) => boolean;

@@ -8,7 +8,7 @@ import { Database } from '@/schema/lib/config/supabase-schema';
 import { Background, Controls, Edge, Node, ReactFlow, ReactFlowProvider, useEdgesState, useNodesState, useViewport } from '@xyflow/react';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { getCharacterTable } from '@/lib/util/helper/get-table-util';
+import { getCharactersByOrg } from '@/lib/util/helper/get-table-util';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { buttonCn } from '@/styles/class';
@@ -26,7 +26,7 @@ export function ReactFlowDisplay(): ReactNode {
       const [, , type, id] = asPath.split('/');
       const sheets = (await sunkistAxios({
         method: 'get',
-        url: '/api/v1/service/database/supabase/protected/st_flow_sheet',
+        url: '/v1/cloud/supabase/protected/st_flow_sheet',
         params: {
           filters: [
             { column: 'organization_id', func: 'eq', value: organizationId },
@@ -42,7 +42,7 @@ export function ReactFlowDisplay(): ReactNode {
       if (!sheets.length) {
         const newSheet = await sunkistAxios({
           method: 'post',
-          url: '/api/v1/service/database/supabase/protected/st_flow_sheet',
+          url: '/v1/cloud/supabase/protected/st_flow_sheet',
           body: {
             row: {
               organization_id: organizationId,
@@ -59,7 +59,7 @@ export function ReactFlowDisplay(): ReactNode {
       const [nodeRes, edgeRes] = await Promise.all([
         sunkistAxios({
           method: 'get',
-          url: '/api/v1/service/database/supabase/protected/st_flow_node',
+          url: '/v1/cloud/supabase/protected/st_flow_node',
           params: {
             filters: [
               { column: 'organization_id', func: 'eq', value: organizationId },
@@ -69,7 +69,7 @@ export function ReactFlowDisplay(): ReactNode {
         }),
         sunkistAxios({
           method: 'get',
-          url: '/api/v1/service/database/supabase/protected/st_flow_edge',
+          url: '/v1/cloud/supabase/protected/st_flow_edge',
           params: {
             filters: [
               { column: 'organization_id', func: 'eq', value: organizationId },
@@ -109,7 +109,7 @@ export function ReactFlowDisplay(): ReactNode {
 
   const getCharacters = async (): Promise<void> => {
     try {
-      const res = await getCharacterTable(organizationId as string);
+      const res = await getCharactersByOrg(organizationId as string);
       setCharacters(res as Database['public']['Tables']['st_character']['Row'][]);
     } catch (error) {
       console.error(errorMessage(error));

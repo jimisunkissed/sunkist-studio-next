@@ -4,15 +4,11 @@ import { create } from 'zustand';
 
 export const useAppStore = create<AppStoreSchema>((set) => ({
   // App Settings
-  appId: process.env.NEXT_PUBLIC_APP_ID ?? '',
-  appCode: process.env.NEXT_PUBLIC_APP_CODE ?? '',
   superUsers: ['user_2uxZBQH9VRynZT9l3iXrryaMt7z'],
 
   // Authentication
   authenticated: false,
-  token: '',
   setAuthenticated: (value: boolean) => set({ authenticated: value }),
-  setToken: (value: string) => set({ token: value }),
 
   // Organization
   organizations: null,

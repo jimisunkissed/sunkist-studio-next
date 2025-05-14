@@ -8,7 +8,7 @@ const clerkHeader = {
 export const clerkOrgGet = async (userId: string) => {
   try {
     const result = await axios.get('https://api.clerk.com/v1/organizations', { params: { user_id: userId }, headers: clerkHeader });
-    return result;
+    return result.data;
   } catch (error) {
     throw error;
   }

@@ -67,12 +67,17 @@ export const isValidConnection = (connection: Connection): boolean => {
   const levelPairs = [
     { source: 'entity', target: 'entity' },
     { source: 'portal', target: 'entity' },
+    { source: 'portal', target: 'portal' },
     { source: 'value', target: 'portal' },
   ];
   const pair = levelPairs.find((pair) => pair.source === source[0] && pair.target === target[0]);
 
   if (!pair) return false;
-  if (pair.target === 'entity' && (source[1] !== target[1] || source[2] !== target[2])) return false;
+  if (
+    (pair.target === 'entity' || (pair.source === 'portal' && pair.target === 'portal')) &&
+    (source[1] !== target[1] || source[2] !== target[2])
+  )
+    return false;
 
   return true;
 };

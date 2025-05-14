@@ -1,3 +1,4 @@
+import { authStore } from '@/hooks/auth-store';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 type SunkistAxiosProps = {
@@ -8,9 +9,9 @@ type SunkistAxiosProps = {
   body?: any;
 };
 
-export async function sunkistAxios({ method, url = '', headers = {}, params = {}, body = {} }: SunkistAxiosProps) {
-  const baseURL = process.env.NODE_ENV === 'production' ? 'https://sunkist-api-next.vercel.app' : 'http://localhost:3001';
+export const SunkistBaseURL: string = process.env.NODE_ENV === 'production' ? 'https://sunkist-api-next.vercel.app' : 'http://localhost:8080';
 
+export async function sunkistAxios({ method, url = '', headers = {}, params = {}, body = {} }: SunkistAxiosProps) {
   const encodedParams: Record<string, any> = {};
   Object.keys(params).forEach((key) => {
     const encodedKey = encodeURIComponent(key);
@@ -18,14 +19,12 @@ export async function sunkistAxios({ method, url = '', headers = {}, params = {}
   });
 
   const config: AxiosRequestConfig = {
-    baseURL,
+    baseURL: SunkistBaseURL,
     url,
     method,
     headers: {
-      'x-app-id': process.env.NEXT_PUBLIC_APP_ID,
-      'x-app-code': process.env.NEXT_PUBLIC_APP_CODE,
       'Content-Type': 'application/json',
-      Authorization: localStorage.getItem('token'),
+      Authorization: authStore.getToken(),
       ...headers,
     },
     params: encodedParams,

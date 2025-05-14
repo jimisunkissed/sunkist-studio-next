@@ -28,7 +28,7 @@ export function ProjectSubmenuHeader(): ReactNode {
         slug: convertToSlug(name),
         userId,
       };
-      await axios.post('/api/v1/auth/clerk/organization', req);
+      await axios.post('/api/v1/clerk/auth/organization', req);
       setOpen(false);
     } catch (error) {
       console.error(errorMessage(error));

@@ -1,7 +1,9 @@
 import { useAppStore } from '@/hooks/app-store';
+import { authStore } from '@/hooks/auth-store';
 import { BouncingBlock } from '@/lib/component/loader/bouncing-block';
 import { AppSidebar } from '@/lib/component/navigation/app-sidebar';
 import { errorMessage } from '@/lib/util/general/string-util';
+import { createSigner } from '@/lib/util/server/token-util';
 import { AppLayoutProps } from '@/schema/lib/component/layout-schema';
 import { ProjectProps } from '@/schema/pages/app/project-schema';
 import { useAuth, useOrganizationList, useUser } from '@clerk/nextjs';
@@ -19,10 +21,10 @@ export function AppLayout({ children }: AppLayoutProps): ReactNode {
   const fullpageRoute: string[] = ['/app/character/[id]/flow'];
 
   const appCredential = async () => {
-    if (!setActive) return;
+    if (!user?.id || !setActive) return;
 
     try {
-      const res = await axios.get(`/api/v1/auth/clerk/organization?userId=${user?.id}`);
+      const res = await axios.get(`/api/v1/auth/clerk/organization?userId=${user.id}`);
       const organizations: ProjectProps[] = res.data.data.map((x: ProjectProps) => ({ id: x.id, slug: x.slug, name: x.name }));
       appStore.setOrganizations(organizations);
 
@@ -34,9 +36,11 @@ export function AppLayout({ children }: AppLayoutProps): ReactNode {
       appStore.setOrganizationId(orgId ?? '');
       await setActive({ organization: orgId });
 
-      const token: string = (await getToken()) ?? '';
-      localStorage.setItem('token', token ? `Bearer ${token}` : '');
-      appStore.setToken(token ? `Bearer ${token}` : '');
+      const [signer, token]: [signer: string, token: string | null] = await Promise.all([createSigner(user.id), getToken()]);
+      const session = await axios.post('/api/v1/auth/clerk/session', { signer, token });
+      const serviceToken: string | undefined = session?.data;
+      authStore.setSigner(signer);
+      authStore.setToken(serviceToken ? serviceToken : null);
 
       appStore.setUserId(user?.id ?? '');
       appStore.setEmail(user?.emailAddresses?.[0]?.emailAddress ?? '');

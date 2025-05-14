@@ -130,14 +130,14 @@ export function FlexSelect({
               transformOrigin: 'top left',
             }}
           >
-            {options.map((x, i) => (
+            {options.map((option, i) => (
               <SelectItem
                 key={i}
-                value={itemValue(x)}
+                value={itemValue(option)}
                 className={cn('hover:bg-neutral-100 transition-colors', currentSize.content)}
                 style={{ maxWidth: ((clickRef.current?.getBoundingClientRect().width ?? 0) as number) / (scale as number) - 12 }}
               >
-                <Item prop={x} />
+                <Item prop={option} />
               </SelectItem>
             ))}
           </SelectContent>

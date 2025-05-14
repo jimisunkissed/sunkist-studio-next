@@ -13,6 +13,7 @@ import {
   IconBriefcase,
   IconCalendarClock,
   IconChairDirector,
+  IconFolderOpen,
   IconMasksTheater,
   IconMoneybag,
   IconPhotoScan,
@@ -75,6 +76,11 @@ export function AppSidebar(): ReactNode {
         Icon: IconPhotoScan,
         Header: <></>,
         Body: <></>,
+      },
+      {
+        name: 'File',
+        path: '/file',
+        Icon: IconFolderOpen,
       },
     ],
     [

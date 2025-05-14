@@ -5,7 +5,7 @@ import ReactFlowBoard from '@/lib/component/react-flow/react-flow-board';
 import { ReactFlowSidebar } from '@/lib/component/react-flow/react-flow-sidebar';
 import { ReactFlowTopbar } from '@/lib/component/react-flow/react-flow-topbar';
 import { errorMessage } from '@/lib/util/general/string-util';
-import { getCharacterTable } from '@/lib/util/helper/get-table-util';
+import { getCharactersByOrg } from '@/lib/util/helper/get-table-util';
 import { ReactFlowBoardRef } from '@/schema/lib/component/react-flow-schema';
 import { Database } from '@/schema/lib/config/supabase-schema';
 import { DndContext, DragEndEvent, useDroppable } from '@dnd-kit/core';
@@ -33,7 +33,7 @@ function ReactFlowPage(): ReactNode {
       const [, , type, id] = asPath.split('/');
       const sheets = (await sunkistAxios({
         method: 'get',
-        url: '/api/v1/service/database/supabase/protected/st_flow_sheet',
+        url: '/v1/cloud/supabase/protected/st_flow_sheet',
         params: {
           filters: [
             { column: 'organization_id', func: 'eq', value: organizationId },
@@ -48,7 +48,7 @@ function ReactFlowPage(): ReactNode {
       if (!sheets.length) {
         const newSheet = await sunkistAxios({
           method: 'post',
-          url: '/api/v1/service/database/supabase/protected/st_flow_sheet',
+          url: '/v1/cloud/supabase/protected/st_flow_sheet',
           body: {
             row: {
               organization_id: organizationId,
@@ -68,7 +68,7 @@ function ReactFlowPage(): ReactNode {
 
   const getCharacters = async (): Promise<void> => {
     try {
-      const res = await getCharacterTable(organizationId as string);
+      const res = await getCharactersByOrg(organizationId as string);
       setCharacters(res as Database['public']['Tables']['st_character']['Row'][]);
     } catch (error) {
       console.error(errorMessage(error));
